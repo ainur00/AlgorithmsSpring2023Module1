@@ -1,0 +1,29 @@
+#include <iostream>
+#include <cstdint>
+#include <map>
+
+int64_t GetPyramidsCount(int64_t cubeCountLeft, int64_t bottomLayerCubeCount, std::map<std::pair<int64_t, int64_t>, int64_t>& cache) {
+    if (cubeCountLeft < 0)
+        return 0;
+    auto valuePtr = cache.find(std::make_pair(cubeCountLeft, bottomLayerCubeCount));
+    if (valuePtr != cache.end())
+        return valuePtr->second;
+    return cache[std::make_pair(cubeCountLeft, bottomLayerCubeCount)] = GetPyramidsCount(cubeCountLeft - bottomLayerCubeCount, bottomLayerCubeCount, cache) + GetPyramidsCount(cubeCountLeft, bottomLayerCubeCount - 1, cache);
+}
+
+int64_t GetPyramidsCount(int64_t cubeCount) {
+    std::map<std::pair<int64_t, int64_t>, int64_t> cache;
+    for (int64_t i = 0; i <= cubeCount; ++i)
+        cache[std::make_pair(0, i)] = 1;
+    for (int64_t i = 1; i <= cubeCount; ++i)
+        cache[std::make_pair(i, 0)] = 0;
+    return GetPyramidsCount(cubeCount, cubeCount, cache);
+}
+
+int main() {
+    int64_t cubeCount = 0;
+    std::cin >> cubeCount;
+    std::cout << GetPyramidsCount(cubeCount) << std::endl;
+    return 0;
+}
+
