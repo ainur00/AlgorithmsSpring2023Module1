@@ -39,7 +39,6 @@ class BigInteger {
         static std::vector<unsigned int> GetVectorRemainder(const std::vector<unsigned int>&, const std::vector<unsigned int>&);
         static char GetVectorCompareResult(const std::vector<unsigned int>&, const std::vector<unsigned int>&);
         static void DeleteLeadingZeros(std::vector<unsigned int>&);
-        // secondary methods
         static std::vector<unsigned int> GetVectorProduct(const std::vector<unsigned int>&, const unsigned int&, const unsigned int&);
         static void Add(std::vector<unsigned int>&, const unsigned int&, const unsigned int&);
         static void PushBackVector(std::vector<unsigned int>&, const std::vector<unsigned int>&, const unsigned int&);
@@ -73,7 +72,7 @@ BigInteger::BigInteger(const char* num) : digits(std::vector<unsigned int>(0)) {
     }
 }
 BigInteger::BigInteger(const std::string& num) : BigInteger(&num[0]) {}
-BigInteger::BigInteger(int num) : digits(std::vector<unsigned int>(0)) {
+BigInteger::BigInteger(int num) : digits(0) {
     if (num == 0) {
         isNegative = false;
         digits.push_back(0);
@@ -87,7 +86,7 @@ BigInteger::BigInteger(int num) : digits(std::vector<unsigned int>(0)) {
     }
 }
 void BigInteger::DeleteLeadingZeros(std::vector<unsigned int>& digits) {
-    while ((digits[digits.size() - 1] == 0) && (digits.size() > 1))
+    while ((digits.size() > 1) && (digits[digits.size() - 1] == 0))
         digits.pop_back();
 }
 char BigInteger::GetVectorCompareResult(const std::vector<unsigned int>& digits1, const std::vector<unsigned int>& digits2) {
@@ -233,6 +232,8 @@ std::vector<unsigned int> BigInteger::GetVectorProduct(const std::vector<unsigne
     return GetVectorProduct(digits, numV);
 }
 std::vector<unsigned int> BigInteger::GetVectorQuotient(const std::vector<unsigned int>& digits1, const std::vector<unsigned int>& digits2) {
+    if ((digits2.size() == 1) && (digits2[0] == 0))
+        throw std::runtime_error("Divide by zero.");
     if (digits1.size() < digits2.size())
         return std::vector<unsigned int>(1, 0);
     std::vector<unsigned int> digits1Copy = digits1;
@@ -301,6 +302,8 @@ BigInteger operator-(const BigInteger& bigInt1, const BigInteger& bigInt2) {
 BigInteger& BigInteger::operator*=(const BigInteger& bigInt) {
     isNegative = isNegative != bigInt.isNegative;
     digits = GetVectorProduct(digits, bigInt.digits);
+    if ((digits[0] == 0) && (digits.size() == 1))
+        isNegative = false;
     return *this;
 }
 BigInteger operator*(const BigInteger& bigInt1, const BigInteger& bigInt2) {
