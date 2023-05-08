@@ -143,7 +143,7 @@ int16_t* IFFT(const std::vector<Complex>& modifiedData) {
     std::vector<Complex> oneRoots = GetRootsFromOne(modifiedData.size(), false);
     std::vector<Complex> IFFTModifiedData = IFFTRecursion(modifiedData, oneRoots, modifiedData.size());
     for (uint32_t i = 0; i < modifiedData.size(); ++i)
-        outputData[i] = std::round(IFFTModifiedData[i].re) / modifiedData.size(); // i don`t know why </ modifiedData.size()> maybe because there is <*> once again in IFFTRecoursion.
+        outputData[i] = std::round(IFFTModifiedData[i].re) / modifiedData.size();
     return outputData;
 }
 
